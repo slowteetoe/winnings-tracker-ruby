@@ -1,4 +1,8 @@
 winnings-tracker-ruby
 =====================
 
-First in a series of X implementations of a winnings tracker
+First in a series of X implementations of a winnings tracker.
+
+To run:
+
+rackup
