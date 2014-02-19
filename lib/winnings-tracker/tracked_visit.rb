@@ -5,4 +5,5 @@ class TrackedVisit
   property :buy_in, Decimal, default: 0.00
   property :cash_out, Decimal, default: 0.00
   belongs_to :location
+  belongs_to :user
 end

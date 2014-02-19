@@ -10,6 +10,7 @@ DataMapper.setup(:default, uri)
 
 require_relative 'tracked_visit.rb'
 require_relative 'location.rb'
+require_relative 'user.rb'
 
 DataMapper.finalize
 DataMapper.auto_migrate!
