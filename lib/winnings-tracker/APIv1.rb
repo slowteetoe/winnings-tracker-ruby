@@ -4,33 +4,20 @@ require 'dm-migrations'
 require 'dm-serializer'
 
 DataMapper::Logger.new($stdout, :debug)
-logger = Logger.new($stdout)
-
-uri = "sqlite3://#{Dir.pwd}/winnings.db"
+uri = (ENV["DB_URL"] || "sqlite3://#{Dir.pwd}/winnings-test.db")
 
 DataMapper.setup(:default, uri)
 
-class Location
-  include DataMapper::Resource
-  property :id,    Serial
-  property :name,  String, unique: true
-  has n, :tracked_visit
-end
-
-class TrackedVisit
-  include DataMapper::Resource
-  property :id, Serial
-  property :visit_date, DateTime, required: true, default: ->(p,s) { DateTime.now }
-  property :buy_in, Decimal, default: 0.00
-  property :cash_out, Decimal, default: 0.00
-  belongs_to :location
-end
+require_relative 'tracked_visit.rb'
+require_relative 'location.rb'
 
 DataMapper.finalize
 DataMapper.auto_migrate!
 
+
 module WinningsTracker
   class APIv1 < Grape::API
+    logger = Logger.new($stdout)
 
     version 'v1', using: :path
     format :json
@@ -46,9 +33,17 @@ module WinningsTracker
         logger.info "Trying to create location for #{params[:name]}"
         Location.create({ :name => params[:name]})
       end
+
+      desc "List known locations"
       get do
         Location.all
       end
+
+      desc "Find a specific location by id"
+      get '/:id' do
+        Location.first(id: params[:id])
+      end
+
     end
 
   end
