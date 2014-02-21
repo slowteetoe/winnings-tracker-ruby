@@ -18,4 +18,12 @@ describe "tracking visits" do
     (DateTime.now.to_i - t[0]["visit_date"].to_i).should == 0
   end
 
+  it "should return all visits for a given user and location" do
+    u = User.create! name: "Jane Doe"
+    3.times do |x|
+      TrackedVisit.create! user_id: u.id, location_id: 1, buy_in: 20.00, cash_out: x * 1.0
+    end
+    TrackedVisit.all( user_id: u.id, location_id: 1).size.should == 3
+  end
+
 end
