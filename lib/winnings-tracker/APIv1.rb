@@ -1,7 +1,7 @@
 require 'grape'
 require 'dm-core'
 require 'dm-migrations'
-require 'dm-serializer'
+require 'dm-serializer/to_json'
 require 'dm-aggregates'
 require_relative 'win_loss_record.rb'
 
@@ -49,8 +49,7 @@ module WinningsTracker
 
     end
 
-    resources :visits do
-
+    resources :visit do
       desc 'Track a visit'
       params do
         requires :user_id, type: Integer
@@ -61,7 +60,6 @@ module WinningsTracker
         optional :visit_date, type: DateTime
       end
       post do
-        logger.info "Would track a visit for user_id #{params['user_id']} and location_id #{params['location_id']}"
         TrackedVisit.create! ({
           user_id: params["user_id"],
           location_id: params["location_id"],
@@ -71,5 +69,12 @@ module WinningsTracker
       end
     end
 
+    resources :user do
+      desc 'get win/loss record'
+      get '/:user_id' do
+        r = WinLossRecord.for_user params["user_id"]
+        { total_cash_out: r.total_cash_out, total_buy_in: r.total_buy_in, net: r.net }
+      end
+    end
   end
 end

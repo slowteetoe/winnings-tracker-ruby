@@ -42,4 +42,18 @@ describe  WinningsTracker::APIv1 do
     loc.fetch("name").should eql "Station's Casino"
   end
 
+  it 'should track the outcome of a visit for a user' do
+    u = User.create! name: "some user"
+    post '/v1/visit', { user_id: u.id, location_id: 1, buy_in: 20.00, cash_out: 80.00 }
+    last_response.status.should == 201
+  end
+
+  it 'should retrieve win/loss record for a provided user' do
+    u = User.create! name: "some user"
+    post '/v1/visit', { user_id: u.id, location_id: 1, buy_in: 120.00, cash_out: 80.00 }
+
+    get "/v1/user/#{u.id}"
+    JSON.parse(last_response.body).should eql ({ "total_cash_out" => 80.00, "total_buy_in" => 120.00, "net" => -40.00 })
+  end
+
 end
