@@ -3,6 +3,7 @@ require 'dm-core'
 require 'dm-migrations'
 require 'dm-serializer/to_json'
 require 'dm-aggregates'
+require 'grape-swagger'
 require_relative 'win_loss_record.rb'
 
 DataMapper::Logger.new($stdout, :debug)
@@ -25,6 +26,11 @@ module WinningsTracker
     version 'v1', using: :path
     format :json
     default_format :json
+
+    before do # enable CORS
+      header['Access-Control-Allow-Origin'] = '*'
+      header['Access-Control-Request-Method'] = '*'
+    end
 
     resources :locations do
 
@@ -87,5 +93,6 @@ module WinningsTracker
         { total_cash_out: r.total_cash_out, total_buy_in: r.total_buy_in, net: r.net }
       end
     end
+    add_swagger_documentation :api_version => 'v1'
   end
 end
