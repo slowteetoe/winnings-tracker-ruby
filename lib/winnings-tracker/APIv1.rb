@@ -6,7 +6,7 @@ require 'dm-aggregates'
 require_relative 'win_loss_record.rb'
 
 DataMapper::Logger.new($stdout, :debug)
-uri = (ENV["DB_URL"] || "sqlite3://#{Dir.pwd}/winnings-test.db")
+uri = (ENV["DATABASE_URL"] || "sqlite3://#{Dir.pwd}/winnings-test.db")
 
 DataMapper.setup(:default, uri)
 
@@ -15,7 +15,7 @@ require_relative 'location.rb'
 require_relative 'user.rb'
 
 DataMapper.finalize
-DataMapper.auto_migrate!
+DataMapper.auto_upgrade!
 
 
 module WinningsTracker
@@ -73,6 +73,7 @@ module WinningsTracker
       desc 'get win/loss record'
       get '/:user_id' do
         r = WinLossRecord.for_user params["user_id"]
+        # FIXME: why do I have to do this?  is requiring JSON from the spec helper stomping on #to_json?
         { total_cash_out: r.total_cash_out, total_buy_in: r.total_buy_in, net: r.net }
       end
     end

@@ -46,6 +46,9 @@ GEM
       dm-core (~> 1.2.0)
     dm-migrations (1.2.0)
       dm-core (~> 1.2.0)
+    dm-postgres-adapter (1.2.0)
+      dm-do-adapter (~> 1.2.0)
+      do_postgres (~> 0.10.6)
     dm-serializer (1.2.2)
       dm-core (~> 1.2.0)
       fastercsv (~> 1.5)
@@ -69,6 +72,8 @@ GEM
       uuidtools (~> 2.1)
     dm-validations (1.2.0)
       dm-core (~> 1.2.0)
+    do_postgres (0.10.13)
+      data_objects (= 0.10.13)
     do_sqlite3 (0.10.13)
       data_objects (= 0.10.13)
     equalizer (0.0.9)
@@ -92,6 +97,7 @@ GEM
     minitest (4.7.5)
     multi_json (1.8.4)
     multi_xml (0.5.5)
+    pg (0.17.1)
     rack (1.5.2)
     rack-accept (0.4.5)
       rack (>= 0.4)
@@ -128,8 +134,10 @@ DEPENDENCIES
   autotest
   autotest-fsevent
   datamapper
+  dm-postgres-adapter
   dm-sqlite-adapter
   grape
+  pg
   rack-test
   rspec
   sqlite3
