@@ -56,4 +56,9 @@ describe  WinningsTracker::APIv1 do
     JSON.parse(last_response.body).should eql ({ "total_cash_out" => 80.00, "total_buy_in" => 120.00, "net" => -40.00 })
   end
 
+  it 'should create a new user' do
+    post '/v1/user', { name: "Joe Blow"}
+    last_response.status.should == 201
+  end
+
 end

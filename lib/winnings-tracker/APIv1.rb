@@ -70,6 +70,16 @@ module WinningsTracker
     end
 
     resources :user do
+      desc 'Create a user'
+      params do
+        requires :name, type: String
+      end
+      post do
+        User.first_or_create ({
+          name: params["name"]
+        })
+      end
+
       desc 'get win/loss record'
       get '/:user_id' do
         r = WinLossRecord.for_user params["user_id"]
